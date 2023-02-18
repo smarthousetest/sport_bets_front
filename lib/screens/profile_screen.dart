@@ -93,26 +93,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: TextStyle(color: Colors.white),
                             ))),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border:
-                                Border.all(color: Color(0xff1cfffd), width: 3)),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () {},
-                            child: Text(
-                              "Избранное",
-                              style: TextStyle(color: Colors.white),
-                            ))),
-                  ),
+                  // Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  //   child: Container(
+                  //       decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(10),
+                  //           border:
+                  //               Border.all(color: Color(0xff1cfffd), width: 3)),
+                  //       width: MediaQuery.of(context).size.width,
+                  //       height: 50,
+                  //       child: ElevatedButton(
+                  //           style: ButtonStyle(
+                  //               backgroundColor: MaterialStatePropertyAll(
+                  //                   Colors.transparent)),
+                  //           onPressed: () {},
+                  //           child: Text(
+                  //             "Избранное",
+                  //             style: TextStyle(color: Colors.white),
+                  //           ))),
+                  // ),
                   Padding(
                     padding:
                         const EdgeInsets.only(top: 20, left: 20, right: 20),
