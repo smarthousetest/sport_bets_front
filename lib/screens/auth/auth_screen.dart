@@ -21,6 +21,17 @@ class _AuthState extends State<Auth> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   @override
+  void initState() {
+    if (cubit.state is AuthSuccessState) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      });
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -84,9 +95,9 @@ class _AuthState extends State<Auth> {
           BlocBuilder<AuthBloc, AuthState>(
             bloc: cubit,
             builder: (context, state) {
-              if (state is NotAuthState) {
-                cubit.checkToken();
-              }
+              // if (state is NotAuthState) {
+              //   cubit.checkToken();
+              // }
               if (cubit.state is AuthSuccessState) {
                 WidgetsBinding.instance!.addPostFrameCallback((_) {
                   Navigator.push(context,

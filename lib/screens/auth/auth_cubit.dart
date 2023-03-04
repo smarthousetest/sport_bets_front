@@ -16,7 +16,7 @@ final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
 
 class AuthBloc extends Cubit<AuthState> {
   Api api = Api();
-  AuthBloc() : super(NotAuthState());
+  AuthBloc() : super(NotAuthState(isAdmin: true));
   String token = '';
 
   Future<void> sendData(String username, String password) async {
@@ -41,6 +41,17 @@ class AuthBloc extends Cubit<AuthState> {
     await storage.write(key: 'key', value: token);
     token = await storage.read(key: 'key');
     print("dsadas ${(await storage.read(key: 'key')).toString()}");
+  }
+
+  Future checkOnAdmin() async {
+    String? token = await storage.read(key: 'key');
+    Map<String, dynamic> payload = Jwt.parseJwt(token!);
+    UserModel userModel = UserModel.fromJson(payload);
+    if (userModel.role == 'user') {
+      emit(NotAuthState(isAdmin: false));
+    } else {
+      emit(NotAuthState(isAdmin: false));
+    }
   }
 
   checkToken() async {
