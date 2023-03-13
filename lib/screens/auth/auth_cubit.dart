@@ -31,9 +31,11 @@ class AuthBloc extends Cubit<AuthState> {
   }
 
   Future<void> register(String username, String email) async {
-    bool request = await api.registerInApp(username: username, email: email);
-    if (request) {
+    var request = await api.registerInApp(username: username, email: email);
+    if (request == 201) {
       emit(RegisterIsSuccess());
+    } else {
+      emit(RegisterIsNotSuccess(errorTitle: request));
     }
   }
 
@@ -50,7 +52,7 @@ class AuthBloc extends Cubit<AuthState> {
     if (userModel.role == 'user') {
       emit(NotAuthState(isAdmin: false));
     } else {
-      emit(NotAuthState(isAdmin: false));
+      emit(NotAuthState(isAdmin: true));
     }
   }
 

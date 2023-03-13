@@ -3,10 +3,7 @@ import 'dart:ffi';
 
 import 'package:bet_app/const.dart';
 import 'package:bet_app/models/bet_model.dart';
-import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:dio/dio.dart';
-import 'package:jwt_decode/jwt_decode.dart';
-import 'package:yookassa_payments_flutter/yookassa_payments_flutter.dart';
 
 import '../../models/login_response.dart';
 
@@ -25,15 +22,17 @@ class Api {
     }
   }
 
-  Future<bool> registerInApp(
+  Future registerInApp(
       {required String username, required String email}) async {
     try {
       Map<String, String> body = {'username': username, 'email': email};
       final response =
           await Dio().post('${ApiConst().api}auth/register', data: body);
-      return response.statusCode == 201;
+      return response.statusCode;
+      // ignore: nullable_type_in_catch_clause
     } on DioError catch (e, st) {
-      return false;
+      Map<String, dynamic> map = e.response!.data;
+      return map['message'];
     }
   }
 
@@ -57,7 +56,7 @@ class Api {
         "probability": probability,
         "bet": bet,
         "comment": comment,
-        "betSuccessful": true
+        "betSuccessful": null
       };
       final response = await Dio().post('${ApiConst().api}betting-advice',
           data: body,
@@ -97,7 +96,9 @@ class Api {
       if (response.statusCode == 200) {
         return res.map((r) => BetModel.fromJson(r)).toList();
       }
-    } on DioError catch (e, st) {}
+    } on DioError catch (e, st) {
+      
+    }
   }
 
   Future<String> sendPaymentToken(
@@ -117,11 +118,33 @@ class Api {
             "Content-Type": "application/json",
             "Authorization": "Bearer $authToken",
           }));
-
-      return response.data;
+      Map<String, dynamic> map = response.data;
+      if (map.containsKey('confirmationUrl')) {
+        return map['confirmationUrl'];
+      } else {
+        return '';
+      }
     } catch (e) {
       print('error $e');
       return '';
     }
+  }
+
+  Future changeBetStatus({required status, required id, required token}) async {
+    Map<String, dynamic> body = {
+      "betSuccessful": status,
+    };
+    try {
+      final response = await Dio().patch('${ApiConst().api}betting-advice/$id',
+          data: body,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+          }));
+      print(response);
+      if (response.statusCode == 201) {
+        print("dasdasd");
+      }
+    } on DioError catch (e, st) {}
   }
 }

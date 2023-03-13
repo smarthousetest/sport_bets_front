@@ -2,6 +2,7 @@ import 'package:bet_app/components/banner.dart';
 import 'package:bet_app/components/credit_card.dart';
 import 'package:bet_app/const.dart';
 import 'package:bet_app/payment.dart';
+import 'package:bet_app/screens/webView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -21,6 +22,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
             'Оплата подписки',
@@ -59,7 +61,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               MaterialStateProperty.all(Colors.transparent)),
                       onPressed: () async {
                         Payment payment = Payment();
-                        payment.getToken();
+                        payment.getToken(context);
                       },
                       child: Text("Оплатить 999 рублей"))),
             )

@@ -55,4 +55,11 @@ class BetCubit extends Cubit<BetCubitState> {
       }
     }
   }
+
+  Future<void> changeStatus(int id, bool status) async {
+    String? token = await storage.read(key: 'key');
+    if (token != null) {
+      await api?.changeBetStatus(status: status, id: id, token: token);
+    }
+  }
 }

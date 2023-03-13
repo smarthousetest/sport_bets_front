@@ -7,6 +7,7 @@ class BetModel {
   String? probability;
   String? bet;
   String? comment;
+  int? bettingAdviceId;
 
   BetModel(
       {this.sportType,
@@ -16,7 +17,8 @@ class BetModel {
       this.bettingOdds,
       this.probability,
       this.bet,
-      this.comment});
+      this.comment,
+      this.bettingAdviceId});
 
   BetModel.fromJson(Map<String, dynamic> json) {
     sportType = json['sportType'];
@@ -27,6 +29,7 @@ class BetModel {
     probability = json['probability'];
     bet = json['bet'];
     comment = json['comment'];
+    bettingAdviceId = json['bettingAdviceId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +42,7 @@ class BetModel {
     data['probability'] = this.probability;
     data['bet'] = this.bet;
     data['comment'] = this.comment;
+    data['bettingAdviceId'] = this.bettingAdviceId;
     return data;
   }
 }

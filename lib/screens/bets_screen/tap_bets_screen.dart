@@ -1,6 +1,8 @@
 import 'dart:core';
 import 'package:bet_app/const.dart';
+import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -13,6 +15,7 @@ class TapBet extends StatefulWidget {
   String? probability;
   String? bet;
   String? comment;
+  int? bettingId;
   TapBet(
       {super.key,
       this.bet,
@@ -22,7 +25,8 @@ class TapBet extends StatefulWidget {
       this.probability,
       this.sportType,
       this.teamFirst,
-      this.teamSecond});
+      this.teamSecond,
+      this.bettingId});
 
   @override
   State<TapBet> createState() => _TapBetState();
@@ -33,6 +37,35 @@ class _TapBetState extends State<TapBet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context
+                        .read<BetCubit>()
+                        .changeStatus(widget.bettingId!, true);
+                  },
+                  child: Text(
+                    'Зашла',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              context.read<BetCubit>().changeStatus(widget.bettingId!, false);
+            },
+            child: Text(
+              'Не зашла',
+              style: TextStyle(color: Colors.red),
+            ),
+          )
+        ],
         backgroundColor: mainColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),

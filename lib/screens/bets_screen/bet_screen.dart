@@ -55,12 +55,14 @@ class _BetsScreenState extends State<BetsScreen> {
                                       league: list[index].league,
                                       comment: list[index].comment,
                                       probability: list[index].probability,
+                                      bettingId: list[index].bettingAdviceId!,
                                     )));
                       },
                       child: CardModel(
                         teamFirst: list[index].teamFirst!,
                         teamSecond: list[index].teamSecond!,
                         index: index,
+                        id: list[index].bettingAdviceId!,
                       ));
                 },
               );

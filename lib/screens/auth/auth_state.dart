@@ -21,4 +21,15 @@ class AuthSuccessState extends AuthState {}
 
 class RegisterIsSuccess extends AuthState {}
 
+class RegisterIsNotSuccess extends AuthState {
+  String errorTitle;
+  RegisterIsNotSuccess({required this.errorTitle});
+  RegisterIsNotSuccess copyWith({String? errorTitle}) {
+    return RegisterIsNotSuccess(errorTitle: errorTitle ?? this.errorTitle);
+  }
+
+  @override
+  Object? get props => [errorTitle];
+}
+
 class AuthNoRegistratedAccount extends AuthState {}

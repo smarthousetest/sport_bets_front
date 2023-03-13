@@ -20,6 +20,8 @@ class _AuthState extends State<Auth> {
   final AuthBloc cubit = AuthBloc();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool buttonIsEnabled = false;
   @override
   void initState() {
     if (cubit.state is AuthSuccessState) {
@@ -57,10 +59,17 @@ class _AuthState extends State<Auth> {
           Padding(
             padding: const EdgeInsets.only(left: 50, right: 50),
             child: TextFormField(
+              // validator: (value) {
+              //   if (value!.contains('@') && value.contains('.')) {
+              //     return null;
+              //   } else {
+              //     return "Проверьте почту";
+              //   }
+              // },
               controller: email,
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                hintText: "Email",
+                hintText: "Username",
                 hintStyle: TextStyle(color: Colors.white),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(width: 3, color: Colors.white),

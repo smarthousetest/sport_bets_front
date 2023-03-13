@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:bet_app/const.dart';
 import 'package:bet_app/screens/auth/auth_cubit.dart';
+import 'package:bet_app/screens/pay.dart';
+import 'package:bet_app/screens/webView.dart';
 import 'package:bet_app/server/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -23,7 +25,7 @@ class Payment {
   //   // testModeSettings: TestModeSettings(
   //   //     true, 5, Amount(value: 999, currency: Currency.rub), true),
   // );
-  Future<void> getToken() async {
+  Future<void> getToken(BuildContext context) async {
     try {
       var clientApplicationKey = "<Ключ для клиентских приложений>";
       var amount = Amount(value: 999, currency: Currency.rub);
@@ -59,26 +61,39 @@ class Payment {
               currency: amount.currency.toString(),
               authToken: authToken);
         }
-        WebViewController controller = WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setBackgroundColor(const Color(0x00000000))
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onProgress: (int progress) {
-                // Update loading bar.
-              },
-              onPageStarted: (url) {},
-              onPageFinished: (url) {},
-              onWebResourceError: (WebResourceError error) {},
-              onNavigationRequest: (NavigationRequest request) {
-                if (request.url.startsWith('$url')) {
-                  return NavigationDecision.prevent;
-                }
-                return NavigationDecision.navigate;
-              },
-            ),
-          )
-          ..loadRequest(Uri.parse('https://flutter.dev'));
+        if (url!.isNotEmpty) {
+          var controller = WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..setBackgroundColor(const Color(0x00000000))
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onProgress: (int progress) {
+                  // Update loading bar.
+                },
+                onPageStarted: (url) {},
+                onPageFinished: (url) {},
+                onWebResourceError: (WebResourceError error) {},
+                onNavigationRequest: (NavigationRequest request) {
+                  if (request.url.startsWith('$url')) {
+                    return NavigationDecision.prevent;
+                  }
+                  return NavigationDecision.navigate;
+                },
+              ),
+            )
+            ..loadRequest(Uri.parse('$url'));
+          await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Подтверждение"),
+                    content: Container(
+                      height: 250,
+                      child: MyWebView(
+                        controller: controller,
+                      ),
+                    ),
+                  ));
+        }
       } else if (result is ErrorTokenizationResult) {
         // showDialog(
         //     context: context,
