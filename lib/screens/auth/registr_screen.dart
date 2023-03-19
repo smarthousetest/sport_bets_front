@@ -111,7 +111,7 @@ class _RegistrState extends State<Registr> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           await cubit.register(username.text, email.text);
-                          if (state is RegisterIsSuccess) {
+                          if (cubit.state is RegisterIsSuccess) {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
@@ -132,11 +132,13 @@ class _RegistrState extends State<Registr> {
                                     ));
                           }
 
-                          if (state is RegisterIsNotSuccess) {
+                          if (cubit.state is RegisterIsNotSuccess) {
                             showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                      content: Text(state.errorTitle),
+                                      content: Text(
+                                          (state as RegisterIsNotSuccess)
+                                              .errorTitle),
                                     ));
                           }
                         }

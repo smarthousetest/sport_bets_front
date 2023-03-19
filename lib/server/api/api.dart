@@ -22,8 +22,10 @@ class Api {
     }
   }
 
-  Future registerInApp(
-      {required String username, required String email}) async {
+  Future registerInApp({
+    required String username,
+    required String email,
+  }) async {
     try {
       Map<String, String> body = {'username': username, 'email': email};
       final response =
