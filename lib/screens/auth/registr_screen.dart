@@ -92,6 +92,7 @@ class _RegistrState extends State<Registr> {
               ),
             ),
             BlocBuilder<AuthBloc, AuthState>(
+              bloc: cubit,
               builder: (context, state) {
                 // if (state is NotAuthState) {
                 //   cubit.checkToken();
