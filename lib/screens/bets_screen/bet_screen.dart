@@ -21,7 +21,6 @@ class _BetsScreenState extends State<BetsScreen> {
   @override
   Widget build(BuildContext context) {
     context.read<BetCubit>().getBets();
-    context.read<BetCubit>().emit(BetLoading());
     return Scaffold(
         backgroundColor: mainColor,
         body: Padding(
@@ -32,39 +31,46 @@ class _BetsScreenState extends State<BetsScreen> {
               return Center(child: CircularProgressIndicator());
             }
             if (state is BetLoaded) {
-              return GridView.builder(
-                itemCount: state.betModel!.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (context, index) {
-                  List<BetModel> list = state.betModel!.reversed.toList();
-                  return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TapBet(
-                                      teamFirst: list[index].teamFirst,
-                                      teamSecond: list[index].teamSecond,
-                                      bet: list[index].bet,
-                                      bettingOdds: list[index].bettingOdds,
-                                      sportType: list[index].sportType,
-                                      league: list[index].league,
-                                      comment: list[index].comment,
-                                      probability: list[index].probability,
-                                      bettingId: list[index].bettingAdviceId!,
-                                    )));
-                      },
-                      child: CardModel(
-                        teamFirst: list[index].teamFirst!,
-                        teamSecond: list[index].teamSecond!,
-                        index: index,
-                        id: list[index].bettingAdviceId!,
-                      ));
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await context.read<BetCubit>().getBets();
                 },
+                child: GridView.builder(
+                  itemCount: state.betModel!.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    List<BetModel> list = state.betModel!.toList();
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TapBet(
+                                        teamFirst: list[index].teamFirst,
+                                        teamSecond: list[index].teamSecond,
+                                        bet: list[index].bet,
+                                        bettingOdds: list[index].bettingOdds,
+                                        sportType: list[index].sportType,
+                                        league: list[index].league,
+                                        comment: list[index].comment,
+                                        probability: list[index].probability,
+                                        bettingId: list[index].bettingAdviceId!,
+                                        betSuccess: list[index].betSuccessful,
+                                      )));
+                        },
+                        child: CardModel(
+                          teamFirst: list[index].teamFirst!,
+                          teamSecond: list[index].teamSecond!,
+                          index: index,
+                          id: list[index].bettingAdviceId!,
+                          betSuccessful: list[index].betSuccessful,
+                        ));
+                  },
+                ),
               );
             }
             if (state is BetIsEmpty) {
@@ -75,5 +81,9 @@ class _BetsScreenState extends State<BetsScreen> {
             return Text("data");
           }),
         ));
+  }
+
+  _onRefresh(BuildContext context) {
+    context.read<BetCubit>().getBets();
   }
 }

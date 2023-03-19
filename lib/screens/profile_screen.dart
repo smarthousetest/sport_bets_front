@@ -3,6 +3,7 @@ import 'package:bet_app/models/user_model.dart';
 import 'package:bet_app/screens/auth/auth_cubit.dart';
 import 'package:bet_app/screens/auth/auth_screen.dart';
 import 'package:bet_app/screens/auth/auth_state.dart';
+import 'package:bet_app/screens/help_screen.dart';
 import 'package:bet_app/screens/pay.dart';
 import 'package:bet_app/screens/profile_cubit/profile_cubit.dart';
 import 'package:bet_app/screens/profile_cubit/profile_state.dart';
@@ -127,7 +128,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: ButtonStyle(
                                 backgroundColor: MaterialStatePropertyAll(
                                     Colors.transparent)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Support()));
+                            },
                             child: Text(
                               "Помощь",
                               style: TextStyle(color: Colors.white),

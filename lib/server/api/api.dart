@@ -96,9 +96,7 @@ class Api {
       if (response.statusCode == 200) {
         return res.map((r) => BetModel.fromJson(r)).toList();
       }
-    } on DioError catch (e, st) {
-      
-    }
+    } on DioError catch (e, st) {}
   }
 
   Future<String> sendPaymentToken(
@@ -142,7 +140,7 @@ class Api {
             "Authorization": "Bearer $token",
           }));
       print(response);
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print("dasdasd");
       }
     } on DioError catch (e, st) {}

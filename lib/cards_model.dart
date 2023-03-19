@@ -16,11 +16,14 @@ class CardModel extends StatefulWidget {
   String teamSecond;
   int index;
   int id;
-  CardModel(
-      {required this.teamFirst,
-      required this.teamSecond,
-      required this.index,
-      required this.id});
+  bool? betSuccessful;
+  CardModel({
+    required this.teamFirst,
+    required this.teamSecond,
+    required this.index,
+    required this.id,
+    this.betSuccessful,
+  });
   @override
   State<CardModel> createState() => _CardModelState();
 }
@@ -41,20 +44,74 @@ class _CardModelState extends State<CardModel> {
           BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
             context.read<AuthBloc>().checkOnAdmin;
             if (state is NotAuthState) {
-              if (state.isAdmin)
+              if (state.isAdmin) {
+                return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  widget.betSuccessful != null
+                      ? GestureDetector(
+                          onTap: () {
+                            context.read<BetCubit>().deleteBets(widget.id);
+                            context.read<BetCubit>().getBets();
+                          },
+                          child: Container(
+                              height: 30,
+                              width: 30,
+                              child: SvgPicture.asset('assets/delete.svg')),
+                        )
+                      : Align(
+                          alignment: Alignment.topRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<BetCubit>().deleteBets(widget.id);
+                              context.read<BetCubit>().getBets();
+                            },
+                            child: Container(
+                                height: 30,
+                                width: 30,
+                                child: SvgPicture.asset('assets/delete.svg')),
+                          ),
+                        ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: widget.betSuccessful == true
+                        ? Text(
+                            "Hit",
+                            style: GoogleFonts.oswald(
+                                color: Colors.green, fontSize: 15),
+                          )
+                        : widget.betSuccessful == false
+                            ? Text(
+                                "Miss",
+                                style: GoogleFonts.oswald(
+                                    color: Colors.red, fontSize: 15),
+                              )
+                            : widget.betSuccessful == null
+                                ? Container()
+                                : Container(),
+                  )
+                ]);
+              } else {
                 return Align(
                   alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      context.read<BetCubit>().deleteBets(widget.id);
-                      context.read<BetCubit>().getBets();
-                    },
-                    child: Container(
-                        height: 30,
-                        width: 30,
-                        child: SvgPicture.asset('assets/delete.svg')),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: widget.betSuccessful == true
+                        ? Text(
+                            "Hit",
+                            style: GoogleFonts.oswald(
+                                color: Colors.green, fontSize: 15),
+                          )
+                        : widget.betSuccessful == false
+                            ? Text(
+                                "Miss",
+                                style: GoogleFonts.oswald(
+                                    color: Colors.red, fontSize: 15),
+                              )
+                            : widget.betSuccessful == null
+                                ? Container()
+                                : Container(),
                   ),
                 );
+              }
             }
             return Container();
           }),

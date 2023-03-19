@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth/auth_cubit.dart';
 
 class BetCubit extends Cubit<BetCubitState> {
-  Api? api = Api();
+  Api api = Api();
   BetCubit() : super(NoBetState());
 
   Future<void> addBet(
@@ -23,7 +23,7 @@ class BetCubit extends Cubit<BetCubitState> {
       String comment) async {
     String? token = await storage.read(key: 'key');
     if (token != null) {
-      await api?.addBet(
+      await api.addBet(
           sportType: sportType,
           league: league,
           teamFirst: teamFirst,
@@ -38,28 +38,28 @@ class BetCubit extends Cubit<BetCubitState> {
 
   Future<void> deleteBets(int id) async {
     String? token = await storage.read(key: 'key');
-    await api?.deleteBet(token: token!, id: id);
+    await api.deleteBet(token: token!, id: id);
   }
 
   Future<void> getBets() async {
-    Api api = Api();
     emit(BetLoading());
     String? token = await storage.read(key: 'key');
     print("toks = $token");
     if (token != null) {
-      List<BetModel>? bet = await api.getBets(token);
-      if (bet!.isEmpty) {
-        emit(BetIsEmpty());
-      } else {
-        emit(BetLoaded(betModel: bet));
-      }
+      List<BetModel>? bet = await api.getBets(token).then((bet) {
+        if (bet == null) {
+          emit(BetIsEmpty());
+        } else {
+          emit(BetLoaded(betModel: bet));
+        }
+      });
     }
   }
 
-  Future<void> changeStatus(int id, bool status) async {
+  Future<void> changeStatus(int id, bool? status) async {
     String? token = await storage.read(key: 'key');
     if (token != null) {
-      await api?.changeBetStatus(status: status, id: id, token: token);
+      await api.changeBetStatus(status: status, id: id, token: token);
     }
   }
 }

@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:core';
 import 'package:bet_app/const.dart';
+import 'package:bet_app/screens/auth/auth_cubit.dart';
+import 'package:bet_app/screens/auth/auth_state.dart';
 import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +20,7 @@ class TapBet extends StatefulWidget {
   String? bet;
   String? comment;
   int? bettingId;
+  bool? betSuccess;
   TapBet(
       {super.key,
       this.bet,
@@ -26,7 +31,8 @@ class TapBet extends StatefulWidget {
       this.sportType,
       this.teamFirst,
       this.teamSecond,
-      this.bettingId});
+      this.bettingId,
+      this.betSuccess});
 
   @override
   State<TapBet> createState() => _TapBetState();
@@ -37,34 +43,71 @@ class _TapBetState extends State<TapBet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+          if (state is NotAuthState) {
+            if (state.isAdmin)
+              return Text(
+                "Статус ставки: ${widget.betSuccess}",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              );
+          }
+          return Container();
+        }),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context
-                        .read<BetCubit>()
-                        .changeStatus(widget.bettingId!, true);
-                  },
-                  child: Text(
-                    'Зашла',
-                    style: TextStyle(color: Colors.green),
+          BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+            context.read<AuthBloc>().checkOnAdmin;
+            if (state is NotAuthState) {
+              if (state.isAdmin)
+                // ignore: curly_braces_in_flow_control_structures
+                return Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<BetCubit>()
+                              .changeStatus(widget.bettingId!, true);
+                        },
+                        child: Text(
+                          'Зашла',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<BetCubit>()
+                              .changeStatus(widget.bettingId!, false);
+                        },
+                        child: Text(
+                          'Не зашла',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<BetCubit>()
+                              .changeStatus(widget.bettingId!, null);
+                        },
+                        child: Text(
+                          'Не сыграла',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      )
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              context.read<BetCubit>().changeStatus(widget.bettingId!, false);
-            },
-            child: Text(
-              'Не зашла',
-              style: TextStyle(color: Colors.red),
-            ),
-          )
+                );
+            }
+            return Container();
+          })
         ],
         backgroundColor: mainColor,
         leading: IconButton(
