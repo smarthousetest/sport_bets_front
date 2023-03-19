@@ -37,7 +37,7 @@ void main() async {
   );
   WebViewPlatform.instance;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  await messaging.subscribeToTopic('betting-advices');
+  await messaging.subscribeToTopic('new-betting-advices');
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: false,
