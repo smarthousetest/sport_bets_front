@@ -130,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
       context.read<AuthBloc>().checkOnAdmin();
       if (state is NotAuthState) {
         return Scaffold(
+          backgroundColor: mainColor,
           extendBody: false,
           appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -164,43 +165,45 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
           ),
           body: _children[_currentIndex],
-          bottomNavigationBar: BottomBar(
-            padding: EdgeInsets.all(0),
-            showActiveBackgroundColor: false,
-            height: 50,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            backgroundColor: mainColor,
-            selectedIndex: _currentIndex,
-            items: <BottomBarItem>[
-              BottomBarItem(
-                  activeColor: mainColor,
-                  icon: Image.asset(
-                    "assets/bet_icon.png",
-                    color: _currentIndex == 1 ? Colors.grey : Colors.white,
-                    height: 50,
-                    width: 50,
-                  )
-                  // Image(
-                  //     height: 50,
-                  //     width: 50,
-                  //     image: AssetImage(
-                  //       "assets/bet_icon.png",
-                  //     ),
-                  //     color: _currentIndex == 1 ? Colors.grey : Colors.white),
+          bottomNavigationBar: SafeArea(
+            child: BottomBar(
+              padding: EdgeInsets.all(0),
+              showActiveBackgroundColor: false,
+              height: 50,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              backgroundColor: mainColor,
+              selectedIndex: _currentIndex,
+              items: <BottomBarItem>[
+                BottomBarItem(
+                    activeColor: mainColor,
+                    icon: Image.asset(
+                      "assets/bet_icon.png",
+                      color: _currentIndex == 1 ? Colors.grey : Colors.white,
+                      height: 50,
+                      width: 50,
+                    )
+                    // Image(
+                    //     height: 50,
+                    //     width: 50,
+                    //     image: AssetImage(
+                    //       "assets/bet_icon.png",
+                    //     ),
+                    //     color: _currentIndex == 1 ? Colors.grey : Colors.white),
+                    ),
+                BottomBarItem(
+                  activeColor: Colors.white,
+                  icon: Icon(
+                    Icons.person,
+                    color: _currentIndex == 0 ? Colors.grey : Colors.white,
                   ),
-              BottomBarItem(
-                activeColor: Colors.white,
-                icon: Icon(
-                  Icons.person,
-                  color: _currentIndex == 0 ? Colors.grey : Colors.white,
                 ),
-              ),
-            ],
-            onTap: (position) {
-              setState(() {
-                _currentIndex = position;
-              });
-            },
+              ],
+              onTap: (position) {
+                setState(() {
+                  _currentIndex = position;
+                });
+              },
+            ),
           ),
         );
       }
