@@ -7,9 +7,9 @@ class NoBetState extends BetCubitState {}
 class BetLoading extends BetCubitState {}
 
 class BetLoaded extends BetCubitState {
-  List<BetModel>? betModel;
+  BetsModel? betModel;
   BetLoaded({this.betModel});
-  BetLoaded copyWith({List<BetModel>? betModel}) {
+  BetLoaded copyWith({BetsModel? betModel}) {
     return BetLoaded(betModel: betModel ?? this.betModel);
   }
 

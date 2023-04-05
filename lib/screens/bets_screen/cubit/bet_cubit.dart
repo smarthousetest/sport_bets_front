@@ -5,6 +5,7 @@ import 'package:bet_app/screens/auth/auth_state.dart';
 import 'package:bet_app/screens/bets_screen/cubit/bet_state.dart';
 import 'package:bet_app/server/api/api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../auth/auth_cubit.dart';
 
@@ -20,6 +21,8 @@ class BetCubit extends Cubit<BetCubitState> {
       double bettingOdds,
       double probability,
       String bet,
+      String country,
+      String matchTime,
       String comment) async {
     String? token = await storage.read(key: 'key');
     if (token != null) {
@@ -32,6 +35,8 @@ class BetCubit extends Cubit<BetCubitState> {
           probability: probability,
           bet: bet,
           comment: comment,
+          country: country,
+          matchTime: matchTime,
           token: token);
     }
   }
@@ -46,7 +51,7 @@ class BetCubit extends Cubit<BetCubitState> {
     String? token = await storage.read(key: 'key');
     print("toks = $token");
     if (token != null) {
-      List<BetModel>? bet = await api.getBets(token).then((bet) {
+      BetsModel? bet = await api.getBets(token).then((bet) {
         if (bet == null) {
           emit(BetIsEmpty());
         } else {

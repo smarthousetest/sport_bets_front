@@ -13,7 +13,11 @@ import 'package:bet_app/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
+<<<<<<< HEAD
     await tester.pumpWidget( MyApp());
+=======
+    await tester.pumpWidget(MyApp());
+>>>>>>> 6e64c4088b0b2d99a62bd5e7da7b719ec8d11aaa
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

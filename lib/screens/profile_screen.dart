@@ -1,3 +1,4 @@
+import 'package:bet_app/components/sub_info.dart';
 import 'package:bet_app/const.dart';
 import 'package:bet_app/models/user_model.dart';
 import 'package:bet_app/screens/auth/auth_cubit.dart';
@@ -44,28 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fontWeight: FontWeight.w500,
                             color: Colors.white),
                       ),
-                      Row(
-                        children: [
-                          Text("Account status:",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white)),
-                          Row(
-                            children: [
-                              Image.asset(
-                                "assets/activate.png",
-                                width: 20,
-                                height: 20,
-                              ),
-                              Text("Activate",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white)),
-                            ],
-                          )
-                        ],
+                      SubInfo(
+                        profileState: state,
                       )
                     ],
                   ),
