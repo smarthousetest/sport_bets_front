@@ -194,7 +194,7 @@ class _TapBetState extends State<TapBet> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Стаква: ${widget.bet}",
+                    "Ставка: ${widget.bet}",
                     style: GoogleFonts.abel(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,

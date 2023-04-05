@@ -1,5 +1,6 @@
 import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -140,7 +141,10 @@ class _AdminScreenState extends State<AdminScreen> {
             padding:
                 const EdgeInsets.only(left: 50, right: 50, top: 20, bottom: 50),
             child: TextFormField(
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+               inputFormatters: [
+    FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+  ],
               controller: textEditingController6,
               enableSuggestions: false,
               autocorrect: false,
@@ -161,7 +165,10 @@ class _AdminScreenState extends State<AdminScreen> {
             padding:
                 const EdgeInsets.only(left: 50, right: 50, top: 20, bottom: 50),
             child: TextFormField(
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+               inputFormatters: [
+    FilteringTextInputFormatter.allow(RegExp('[0-9.,]')),
+  ],
               controller: textEditingController7,
               enableSuggestions: false,
               autocorrect: false,
