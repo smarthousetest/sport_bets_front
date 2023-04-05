@@ -1,17 +1,54 @@
+class BetsModel {
+  List<BetModel>? unfinishedAdvices;
+  List<BetModel>? history;
+
+  BetsModel({this.unfinishedAdvices, this.history});
+
+  BetsModel.fromJson(Map<String, dynamic> json) {
+    if (json['unfinishedAdvices'] != null) {
+      unfinishedAdvices = <BetModel>[];
+      json['unfinishedAdvices'].forEach((v) {
+        unfinishedAdvices!.add(new BetModel.fromJson(v));
+      });
+    }
+    if (json['history'] != null) {
+      history = <BetModel>[];
+      json['history'].forEach((v) {
+        history!.add(new BetModel.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.unfinishedAdvices != null) {
+      data['unfinishedAdvices'] =
+          this.unfinishedAdvices!.map((v) => v.toJson()).toList();
+    }
+    if (this.history != null) {
+      data['history'] = this.history!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
 class BetModel {
+  int? bettingAdviceId;
   String? sportType;
   String? league;
   String? teamFirst;
   String? teamSecond;
-  String? bettingOdds;
-  String? probability;
+  double? bettingOdds;
+  int? probability;
   String? bet;
   String? comment;
-  int? bettingAdviceId;
   bool? betSuccessful;
+  String? country;
+  String? matchBeginning;
 
   BetModel(
-      {this.sportType,
+      {this.bettingAdviceId,
+      this.sportType,
       this.league,
       this.teamFirst,
       this.teamSecond,
@@ -19,10 +56,12 @@ class BetModel {
       this.probability,
       this.bet,
       this.comment,
-      this.bettingAdviceId,
-      this.betSuccessful});
+      this.betSuccessful,
+      this.country,
+      this.matchBeginning});
 
   BetModel.fromJson(Map<String, dynamic> json) {
+    bettingAdviceId = json['bettingAdviceId'];
     sportType = json['sportType'];
     league = json['league'];
     teamFirst = json['teamFirst'];
@@ -31,12 +70,14 @@ class BetModel {
     probability = json['probability'];
     bet = json['bet'];
     comment = json['comment'];
-    bettingAdviceId = json['bettingAdviceId'];
     betSuccessful = json['betSuccessful'];
+    country = json['country'];
+    matchBeginning = json['matchBeginning'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['bettingAdviceId'] = this.bettingAdviceId;
     data['sportType'] = this.sportType;
     data['league'] = this.league;
     data['teamFirst'] = this.teamFirst;
@@ -45,8 +86,9 @@ class BetModel {
     data['probability'] = this.probability;
     data['bet'] = this.bet;
     data['comment'] = this.comment;
-    data['bettingAdviceId'] = this.bettingAdviceId;
     data['betSuccessful'] = this.betSuccessful;
+    data['country'] = this.country;
+    data['matchBeginning'] = this.matchBeginning;
     return data;
   }
 }

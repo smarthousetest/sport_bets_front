@@ -8,6 +8,8 @@ import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class TapBet extends StatefulWidget {
@@ -21,6 +23,8 @@ class TapBet extends StatefulWidget {
   String? comment;
   int? bettingId;
   bool? betSuccess;
+  String? country;
+  String? dateTime;
   TapBet(
       {super.key,
       this.bet,
@@ -32,7 +36,9 @@ class TapBet extends StatefulWidget {
       this.teamFirst,
       this.teamSecond,
       this.bettingId,
-      this.betSuccess});
+      this.betSuccess,
+      this.country,
+      this.dateTime});
 
   @override
   State<TapBet> createState() => _TapBetState();
@@ -41,6 +47,9 @@ class TapBet extends StatefulWidget {
 class _TapBetState extends State<TapBet> {
   @override
   Widget build(BuildContext context) {
+    String date =
+        Jiffy.parse(widget.dateTime!).format(pattern: 'dd, MMM в h:mm');
+
     return Scaffold(
       appBar: AppBar(
         title: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
@@ -156,15 +165,30 @@ class _TapBetState extends State<TapBet> {
             height: 50,
             thickness: 2,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              "Спорт: ${widget.sportType}",
-              style: GoogleFonts.abel(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Спорт: ${widget.sportType}",
+                  style: GoogleFonts.abel(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Text(
+                  'Дата и время начала: $date',
+                  style: GoogleFonts.abel(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+                ),
+              )
+            ],
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
@@ -172,7 +196,7 @@ class _TapBetState extends State<TapBet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Страна: Испания",
+                  "Страна: ${widget.country}",
                   style: GoogleFonts.abel(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -252,28 +276,28 @@ class _TapBetState extends State<TapBet> {
               Image.asset(
                 'assets/tran.png',
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 100),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Color(0xff1cfffd), width: 3)),
-                  height: 60,
-                  width: 250,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.transparent)),
-                      onPressed: () {},
-                      child: Text(
-                        "Отслеживать событие",
-                        style: GoogleFonts.ballet(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600),
-                      )),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 0, bottom: 100),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(10),
+              //         border: Border.all(color: Color(0xff1cfffd), width: 3)),
+              //     height: 60,
+              //     width: 250,
+              //     child: ElevatedButton(
+              //         style: ButtonStyle(
+              //             backgroundColor:
+              //                 MaterialStatePropertyAll(Colors.transparent)),
+              //         onPressed: () {},
+              //         child: Text(
+              //           "Отслеживать событие",
+              //           style: GoogleFonts.ballet(
+              //               color: Color.fromARGB(255, 255, 255, 255),
+              //               fontSize: 15,
+              //               fontWeight: FontWeight.w600),
+              //         )),
+              //   ),
+              // ),
             ],
           )
         ],

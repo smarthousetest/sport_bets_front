@@ -10,6 +10,7 @@ import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:bet_app/screens/profile_cubit/profile_cubit.dart';
 import 'package:bet_app/screens/profile_screen.dart';
 import 'package:bet_app/screens/splash_screen.dart';
+import 'package:bet_app/screens/subscription_screen/sub_cubit.dart';
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -78,6 +79,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ProfileCubit>(
           create: (BuildContext context) => ProfileCubit(),
+        ),
+        BlocProvider<SubCubit>(
+          create: (BuildContext context) => SubCubit(),
         )
       ],
       child: MaterialApp(

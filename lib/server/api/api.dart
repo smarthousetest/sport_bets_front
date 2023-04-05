@@ -3,7 +3,11 @@ import 'dart:ffi';
 
 import 'package:bet_app/const.dart';
 import 'package:bet_app/models/bet_model.dart';
+import 'package:bet_app/models/payment_model.dart';
+import 'package:bet_app/models/sub_model.dart';
+import 'package:bet_app/screens/auth/auth_cubit.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/login_response.dart';
 
@@ -47,6 +51,8 @@ class Api {
       required double probability,
       required String bet,
       required String comment,
+      required String country,
+      required String matchTime,
       required String token}) async {
     try {
       Map<String, dynamic> body = {
@@ -58,6 +64,8 @@ class Api {
         "probability": probability,
         "bet": bet,
         "comment": comment,
+        "country": country,
+        "matchBeginning": matchTime,
         "betSuccessful": null
       };
       final response = await Dio().post('${ApiConst().api}betting-advice',
@@ -70,7 +78,9 @@ class Api {
       if (response.statusCode == 201) {
         print("dasdasd");
       }
-    } on DioError catch (e, st) {}
+    } on DioError catch (e, st) {
+      print(e);
+    }
   }
 
   Future deleteBet({required String token, required int id}) async {
@@ -86,7 +96,7 @@ class Api {
     } on DioError catch (e, st) {}
   }
 
-  Future<List<BetModel>?> getBets(String token) async {
+  Future<BetsModel?> getBets(String token) async {
     try {
       final response = await Dio().get('${ApiConst().api}betting-advice',
           options: Options(headers: {
@@ -94,39 +104,98 @@ class Api {
             "Authorization": "Bearer $token",
           }));
       print(response.data);
-      List res = response.data;
       if (response.statusCode == 200) {
-        return res.map((r) => BetModel.fromJson(r)).toList();
+        return BetsModel.fromJson(response.data);
       }
     } on DioError catch (e, st) {}
   }
 
-  Future<String> sendPaymentToken(
+  Future<List<SubModel>?> getSubs(String token) async {
+    try {
+      final response = await Dio().get('${ApiConst().api}subscription',
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+          }));
+      print(response.data);
+      List responseList = response.data as List;
+      print('responce list $responseList');
+      if (response.statusCode == 200) {
+        return responseList.map((job) => new SubModel.fromJson(job)).toList();
+      }
+    } on DioError catch (e, st) {}
+  }
+
+  Future addSub(
+      {required int days, required int price, required String token}) async {
+    try {
+      Map<String, dynamic> body = {
+        "subscriptionDurationInDays": days,
+        "subscriptionPrice": price
+      };
+      final response = await Dio().post('${ApiConst().api}subscription',
+          data: body,
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+          }));
+      print(response);
+      if (response.statusCode == 201) {
+        print("dasdasd");
+      }
+    } on DioError catch (e, st) {}
+  }
+
+  Future<PaymentStatusModel?> getPayment(String token, String paymentId) async {
+    try {
+      print('${ApiConst().api}payment/$paymentId');
+      final response =
+          await Dio().get('${ApiConst().api}yookassa/payment/$paymentId',
+              options: Options(headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer $token",
+              }));
+      print(response);
+      if (response.statusCode == 200) {
+        return PaymentStatusModel.fromJson(response.data);
+      }
+    } on DioError catch (e, st) {}
+  }
+
+  Future<GetPaymentModel?> sendPaymentToken(
       {required String token,
-      required double amount,
-      required String currency,
+      required int subscriptionId,
       required String authToken}) async {
     Map<String, dynamic> body = {
-      "amount": amount,
-      "currency": 'RUB',
+      "subscriptionId": subscriptionId,
       "token": token
     };
     try {
-      final response = await Dio().post('${ApiConst().api}yookassa',
+      final response = await Dio().post('${ApiConst().api}yookassa/payment',
           data: body,
           options: Options(headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $authToken",
           }));
-      Map<String, dynamic> map = response.data;
-      if (map.containsKey('confirmationUrl')) {
-        return map['confirmationUrl'];
-      } else {
-        return '';
+
+      return GetPaymentModel.fromJson(response.data);
+    } catch (e) {
+      print('error $e');
+    }
+  }
+
+  Future<LoginResponse?> refreshToken({String? authToken}) async {
+    try {
+      final response = await Dio().post('${ApiConst().api}auth/refresh-token',
+          options: Options(headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $authToken",
+          }));
+      if (response.statusCode == 201) {
+        return LoginResponse.fromJson(response.data);
       }
     } catch (e) {
       print('error $e');
-      return '';
     }
   }
 

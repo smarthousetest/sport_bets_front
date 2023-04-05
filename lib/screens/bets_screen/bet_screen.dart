@@ -1,10 +1,11 @@
-import 'package:bet_app/cards_model.dart';
+import 'package:bet_app/components/cards_model.dart';
 import 'package:bet_app/const.dart';
 import 'package:bet_app/models/bet_model.dart';
 import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
 import 'package:bet_app/screens/bets_screen/cubit/bet_state.dart';
 import 'package:bet_app/screens/bets_screen/tap_bets_screen.dart';
 import 'package:bet_app/server/api/api.dart';
+import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,8 +24,24 @@ class _BetsScreenState extends State<BetsScreen> {
     context.read<BetCubit>().getBets();
     return Scaffold(
         backgroundColor: mainColor,
-        body: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+        body: BlocBuilder<BetCubit, BetCubitState>(builder: (context, state) {
+          return _floatingTabBar();
+        }));
+  }
+
+  _onRefresh(BuildContext context) {
+    context.read<BetCubit>().getBets();
+  }
+
+  Widget _floatingTabBar() {
+    return ContainedTabBarView(
+      tabs: [
+        Text('Активные'),
+        Text('Завершенные'),
+      ],
+      views: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
           child:
               BlocBuilder<BetCubit, BetCubitState>(builder: (context, state) {
             if (state is BetLoading) {
@@ -35,42 +52,149 @@ class _BetsScreenState extends State<BetsScreen> {
                 onRefresh: () async {
                   await context.read<BetCubit>().getBets();
                 },
-                child: GridView.builder(
-                  itemCount: state.betModel!.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemBuilder: (context, index) {
-                    List<BetModel> list = state.betModel!.toList();
-                    return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TapBet(
-                                        teamFirst: list[index].teamFirst,
-                                        teamSecond: list[index].teamSecond,
-                                        bet: list[index].bet,
-                                        bettingOdds: list[index].bettingOdds,
-                                        sportType: list[index].sportType,
-                                        league: list[index].league,
-                                        comment: list[index].comment,
-                                        probability: list[index].probability,
-                                        bettingId: list[index].bettingAdviceId!,
-                                        betSuccess: list[index].betSuccessful,
-                                      )));
+                child: state.betModel?.unfinishedAdvices?.length == null
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Text(
+                            "Чтобы видеть активные стаки,\nследует активировать подписку",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )
+                    : state.betModel?.unfinishedAdvices?.length != 0
+                        ? GridView.builder(
+                            itemCount:
+                                state.betModel?.unfinishedAdvices?.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemBuilder: (context, index) {
+                              List<BetModel> list =
+                                  state.betModel!.unfinishedAdvices!;
+                              return GestureDetector(
+                                  onTap: () {
+                                    list[index].matchBeginning;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => TapBet(
+                                                  teamFirst:
+                                                      list[index].teamFirst,
+                                                  teamSecond:
+                                                      list[index].teamSecond,
+                                                  bet: list[index].bet,
+                                                  bettingOdds: list[index]
+                                                      .bettingOdds
+                                                      .toString(),
+                                                  sportType:
+                                                      list[index].sportType,
+                                                  league: list[index].league,
+                                                  comment: list[index].comment,
+                                                  probability: list[index]
+                                                      .probability
+                                                      .toString(),
+                                                  bettingId: list[index]
+                                                      .bettingAdviceId!,
+                                                  betSuccess:
+                                                      list[index].betSuccessful,
+                                                  country: list[index].country,
+                                                  dateTime: list[index]
+                                                      .matchBeginning,
+                                                )));
+                                  },
+                                  child: CardModel(
+                                    teamFirst: list[index].teamFirst!,
+                                    teamSecond: list[index].teamSecond!,
+                                    index: index,
+                                    id: list[index].bettingAdviceId!,
+                                    betSuccessful: list[index].betSuccessful,
+                                  ));
+                            },
+                          )
+                        : Center(
+                            child: Text(
+                              "Активных ставок нет",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+              );
+            }
+            if (state is BetIsEmpty) {
+              return Center(
+                child: Text("Is Empty"),
+              );
+            }
+            return Text("data");
+          }),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 10, left: 5, right: 5),
+          child:
+              BlocBuilder<BetCubit, BetCubitState>(builder: (context, state) {
+            if (state is BetLoading) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (state is BetLoaded) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await context.read<BetCubit>().getBets();
+                },
+                child: state.betModel?.history?.length != 0
+                    ? GridView.builder(
+                        itemCount: state.betModel!.history?.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemBuilder: (context, index) {
+                          List<BetModel> list = state.betModel!.history!;
+                          return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TapBet(
+                                              teamFirst: list[index].teamFirst,
+                                              teamSecond:
+                                                  list[index].teamSecond,
+                                              bet: list[index].bet,
+                                              bettingOdds: list[index]
+                                                  .bettingOdds
+                                                  .toString(),
+                                              sportType: list[index].sportType,
+                                              league: list[index].league,
+                                              comment: list[index].comment,
+                                              probability: list[index]
+                                                  .probability
+                                                  .toString(),
+                                              bettingId:
+                                                  list[index].bettingAdviceId!,
+                                              betSuccess:
+                                                  list[index].betSuccessful,
+                                              country: list[index].country,
+                                            )));
+                              },
+                              child: CardModel(
+                                teamFirst: list[index].teamFirst!,
+                                teamSecond: list[index].teamSecond!,
+                                index: index,
+                                id: list[index].bettingAdviceId!,
+                                betSuccessful: list[index].betSuccessful,
+                              ));
                         },
-                        child: CardModel(
-                          teamFirst: list[index].teamFirst!,
-                          teamSecond: list[index].teamSecond!,
-                          index: index,
-                          id: list[index].bettingAdviceId!,
-                          betSuccessful: list[index].betSuccessful,
-                        ));
-                  },
-                ),
+                      )
+                    : Center(
+                        child: Text(
+                          "История пуста",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
               );
             }
             if (state is BetIsEmpty) {
@@ -80,10 +204,9 @@ class _BetsScreenState extends State<BetsScreen> {
             }
             return Text("data");
           }),
-        ));
-  }
-
-  _onRefresh(BuildContext context) {
-    context.read<BetCubit>().getBets();
+        ),
+      ],
+      onChange: (index) => print(index),
+    );
   }
 }

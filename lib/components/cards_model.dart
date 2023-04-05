@@ -17,6 +17,7 @@ class CardModel extends StatefulWidget {
   int index;
   int id;
   bool? betSuccessful;
+
   CardModel({
     required this.teamFirst,
     required this.teamSecond,
@@ -50,6 +51,7 @@ class _CardModelState extends State<CardModel> {
                       ? GestureDetector(
                           onTap: () {
                             context.read<BetCubit>().deleteBets(widget.id);
+
                             context.read<BetCubit>().getBets();
                           },
                           child: Container(
