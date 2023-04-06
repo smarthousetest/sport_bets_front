@@ -1,6 +1,8 @@
 import 'package:bet_app/screens/profile_cubit/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:async/async.dart';
+import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 
 class SubInfo extends StatefulWidget {
   StratProfileState profileState;
@@ -13,7 +15,6 @@ class SubInfo extends StatefulWidget {
 
 class _SubInfoState extends State<SubInfo> {
   CancelableOperation? cancelableLoop;
-
   bool isSubActive = false;
   @override
   void dispose() {
@@ -23,6 +24,13 @@ class _SubInfoState extends State<SubInfo> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime date;
+    late String subExpForm;
+    if (widget.profileState.userModel?.subscriptionExpiresUtc != null) {
+      date = DateTime.parse(
+          widget.profileState.userModel!.subscriptionExpiresUtc!);
+      subExpForm = DateFormat('Активна до MMM dd').format(date);
+    }
     if (cancelableLoop == null) {
       cancelableLoop = CancelableOperation.fromFuture(
         startLoop(widget.profileState.userModel?.subscriptionExpiresUtc),
@@ -56,10 +64,9 @@ class _SubInfoState extends State<SubInfo> {
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: Colors.white))
-                : Text(
-                    "${widget.profileState.userModel!.subscriptionExpiresUtc!}",
+                : Text(subExpForm,
                     style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                         color: Colors.white)),
           ],

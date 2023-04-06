@@ -38,7 +38,7 @@ class BetModel {
   String? league;
   String? teamFirst;
   String? teamSecond;
-  double? bettingOdds;
+  int? bettingOdds;
   int? probability;
   String? bet;
   String? comment;
