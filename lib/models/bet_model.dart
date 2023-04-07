@@ -38,8 +38,8 @@ class BetModel {
   String? league;
   String? teamFirst;
   String? teamSecond;
-  int? bettingOdds;
-  int? probability;
+  num? bettingOdds;
+  num? probability;
   String? bet;
   String? comment;
   bool? betSuccessful;

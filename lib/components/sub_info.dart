@@ -66,7 +66,7 @@ class _SubInfoState extends State<SubInfo> {
                         color: Colors.white))
                 : Text(subExpForm,
                     style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 10,
                         fontWeight: FontWeight.w500,
                         color: Colors.white)),
           ],

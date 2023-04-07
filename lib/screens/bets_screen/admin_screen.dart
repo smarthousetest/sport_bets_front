@@ -226,7 +226,9 @@ class _AdminScreenState extends State<AdminScreen> {
               child: TextFormField(
                 validator: (value) {
                   if (value!.isEmpty) return 'Поле не может быть пустым';
-                  if (value.contains(',')) return 'Используйте . вместо ,';
+                  if (value.contains(',')) {
+                    value.replaceAll(",", ".");
+                  };
                   return null;
                 },
                 keyboardType: TextInputType.numberWithOptions(decimal: true),

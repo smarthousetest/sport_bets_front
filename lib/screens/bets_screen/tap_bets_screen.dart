@@ -165,7 +165,7 @@ class _TapBetState extends State<TapBet> {
             height: 50,
             thickness: 2,
           ),
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
@@ -178,6 +178,7 @@ class _TapBetState extends State<TapBet> {
                       color: Colors.white),
                 ),
               ),
+              SizedBox(height: 10,),
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: Text(
