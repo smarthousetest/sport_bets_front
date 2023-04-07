@@ -178,6 +178,8 @@ class _BetsScreenState extends State<BetsScreen> {
                                               betSuccess:
                                                   list[index].betSuccessful,
                                               country: list[index].country,
+                                              dateTime:
+                                                  list[index].matchBeginning,
                                             )));
                               },
                               child: CardModel(
