@@ -23,12 +23,16 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 2), () {
       // ignore: unrelated_type_equality_checks
       if (widget.state is! AuthSuccessState) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Auth()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Auth()),
+            (Route<dynamic> route) => false);
       } else {
         // WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+            (Route<dynamic> route) => false);
         // });
       }
     });

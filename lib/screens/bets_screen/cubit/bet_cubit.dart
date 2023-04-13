@@ -58,6 +58,8 @@ class BetCubit extends Cubit<BetCubitState> {
           emit(BetLoaded(betModel: bet));
         }
       });
+    } else {
+      emit(DemoBetState());
     }
   }
 

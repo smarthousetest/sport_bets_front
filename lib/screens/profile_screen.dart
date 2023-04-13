@@ -152,6 +152,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         );
+      } else if (state is EmptyProfileState) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Пожалуйста авторизуйтесь в приложении",
+                style: TextStyle(color: Colors.white),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Color(0xff1cfffd), width: 3)),
+                  width: 200,
+                  height: 50,
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.transparent)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Авторизация",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                ),
+              ),
+            ],
+          ),
+        );
       }
       return Container();
     });

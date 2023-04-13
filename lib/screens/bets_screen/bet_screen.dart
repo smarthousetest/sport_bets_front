@@ -122,10 +122,41 @@ class _BetsScreenState extends State<BetsScreen> {
                             ),
                           ),
               );
-            }
-            if (state is BetIsEmpty) {
+            } else if (state is BetIsEmpty) {
               return Center(
                 child: Text("Is Empty"),
+              );
+            } else if (state is DemoBetState) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Для получения доступа к ставкам - авторизуйтесь",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border:
+                              Border.all(color: Color(0xff1cfffd), width: 3)),
+                      width: 200,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.transparent)),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Авторизация",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                    ),
+                  )
+                ],
               );
             }
             return Text("data");
@@ -140,64 +171,65 @@ class _BetsScreenState extends State<BetsScreen> {
             }
             if (state is BetLoaded) {
               return RefreshIndicator(
-                onRefresh: () async {
-                  await context.read<BetCubit>().getBets();
-                },
-                child: state.betModel?.history?.length != 0
-                    ? GridView.builder(
-                        itemCount: state.betModel!.history?.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (context, index) {
-                          List<BetModel> list = state.betModel!.history!;
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TapBet(
-                                              teamFirst: list[index].teamFirst,
-                                              teamSecond:
-                                                  list[index].teamSecond,
-                                              bet: list[index].bet,
-                                              bettingOdds: list[index]
-                                                  .bettingOdds
-                                                  .toString(),
-                                              sportType: list[index].sportType,
-                                              league: list[index].league,
-                                              comment: list[index].comment,
-                                              probability: list[index]
-                                                  .probability
-                                                  .toString(),
-                                              bettingId:
-                                                  list[index].bettingAdviceId!,
-                                              betSuccess:
-                                                  list[index].betSuccessful,
-                                              country: list[index].country,
-                                              dateTime:
-                                                  list[index].matchBeginning,
-                                            )));
-                              },
-                              child: CardModel(
-                                teamFirst: list[index].teamFirst!,
-                                teamSecond: list[index].teamSecond!,
-                                index: index,
-                                id: list[index].bettingAdviceId!,
-                                betSuccessful: list[index].betSuccessful,
-                              ));
-                        },
-                      )
-                    : Center(
-                        child: Text(
-                          "История пуста",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-              );
+                  onRefresh: () async {
+                    await context.read<BetCubit>().getBets();
+                  },
+                  child: state.betModel?.history?.length != 0
+                      ? GridView.builder(
+                          itemCount: state.betModel!.history?.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemBuilder: (context, index) {
+                            List<BetModel> list = state.betModel!.history!;
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TapBet(
+                                                teamFirst:
+                                                    list[index].teamFirst,
+                                                teamSecond:
+                                                    list[index].teamSecond,
+                                                bet: list[index].bet,
+                                                bettingOdds: list[index]
+                                                    .bettingOdds
+                                                    .toString(),
+                                                sportType:
+                                                    list[index].sportType,
+                                                league: list[index].league,
+                                                comment: list[index].comment,
+                                                probability: list[index]
+                                                    .probability
+                                                    .toString(),
+                                                bettingId: list[index]
+                                                    .bettingAdviceId!,
+                                                betSuccess:
+                                                    list[index].betSuccessful,
+                                                country: list[index].country,
+                                                dateTime:
+                                                    list[index].matchBeginning,
+                                              )));
+                                },
+                                child: CardModel(
+                                  teamFirst: list[index].teamFirst!,
+                                  teamSecond: list[index].teamSecond!,
+                                  index: index,
+                                  id: list[index].bettingAdviceId!,
+                                  betSuccessful: list[index].betSuccessful,
+                                ));
+                          },
+                        )
+                      : Center(
+                          child: Text(
+                            "История пуста",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ));
             }
             if (state is BetIsEmpty) {
               return Center(

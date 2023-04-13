@@ -6,6 +6,8 @@ class NoBetState extends BetCubitState {}
 
 class BetLoading extends BetCubitState {}
 
+class DemoBetState extends BetCubitState {}
+
 class BetLoaded extends BetCubitState {
   BetsModel? betModel;
   BetLoaded({this.betModel});

@@ -3,6 +3,8 @@ import 'package:bet_app/main.dart';
 import 'package:bet_app/screens/auth/auth_cubit.dart';
 import 'package:bet_app/screens/auth/auth_state.dart';
 import 'package:bet_app/screens/auth/registr_screen.dart';
+import 'package:bet_app/screens/bets_screen/cubit/bet_cubit.dart';
+import 'package:bet_app/screens/bets_screen/cubit/bet_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -26,8 +28,10 @@ class _AuthState extends State<Auth> {
   void initState() {
     if (cubit.state is AuthSuccessState) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+            (Route<dynamic> route) => false);
       });
     }
     super.initState();
@@ -109,8 +113,10 @@ class _AuthState extends State<Auth> {
               // }
               if (cubit.state is AuthSuccessState) {
                 WidgetsBinding.instance!.addPostFrameCallback((_) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()));
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                      (Route<dynamic> route) => false);
                 });
               }
               return Column(children: [
@@ -143,6 +149,23 @@ class _AuthState extends State<Auth> {
                     },
                     child: Text(
                       "Зарегестрироваться",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      // context.read<BetCubit>().emit(DemoBetState());
+                      // context.read<AuthBloc>().emit(DemoUserState());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyHomePage()));
+                    },
+                    child: Text(
+                      "Пропустить",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

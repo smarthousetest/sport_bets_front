@@ -15,6 +15,8 @@ class NotAuthState extends AuthState {
 
 class UserIsAdmin extends AuthState {}
 
+class DemoUserState extends AuthState {}
+
 class AuthLoadingState extends AuthState {}
 
 class AuthSuccessState extends AuthState {}
